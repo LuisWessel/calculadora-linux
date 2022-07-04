@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="calculadora.css">
+    <title> Calculadora </title>
+
+</head>
+
+<body>
+    <header>
+        <h1>Calculadora</h1>
+    </header>
+
+    <section>
+        <div id="tela"></div>
+        <div id="botoes">
+
+            <p>
+                <input class="b_esp" type="button" value="⌫" onclick="calc('c')">
+                <input class="b_esp" type="button" value="CE" onclick="calc('C')">
+            </p>
+            <p id="b_sinal">
+                <input type="button" value="X" onclick="calc('x')"></br>
+                <input type="button" value="/" onclick="calc('/')"></br>
+                <input type="button" value="+" onclick="calc('+')"></br>
+                <input type="button" value="-" onclick="calc('-')"></br>
+            </p>
+            <p>
+                <input type="button" value="1" onclick="calc(1)">
+                <input type="button" value="2" onclick="calc(2)">
+                <input type="button" value="3" onclick="calc(3)">
+            </p>
+            <p>
+                <input type="button" value="4" onclick="calc(4)">
+                <input type="button" value="5" onclick="calc(5)">
+                <input type="button" value="6" onclick="calc(6)">
+            </p>
+            <p>
+                <input type="button" value="7" onclick="calc(7)">
+                <input type="button" value="8" onclick="calc(8)">
+                <input type="button" value="9" onclick="calc(9)">
+            </p>
+            <p>
+                <input type="button" value="." onclick="calc('.')">
+                <input type="button" value="0" onclick="calc(0)">
+                <input type="button" value="=" onclick="calc('=')">
+            </p>
+
+
+        </div>
+    </section>
+
+    <script src="calculadora.js"></script>
+</body>
+
+</html>

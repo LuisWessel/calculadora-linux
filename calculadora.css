@@ -1,0 +1,55 @@
+p {
+    margin: 0px;
+    padding: 0px;
+}
+
+header {
+    color: white;
+}
+
+body {
+    text-align: center;
+    background-color: black;
+    text-align: center;
+}
+
+section {
+    margin: auto;
+    padding: 20px;
+    border-radius: 3%;
+    width: 310px;
+    height: 600px;
+    background-color: rgb(255, 249, 249);
+}
+
+div#tela {
+    background-color: rgb(160, 166, 160);
+    line-height: 75px;
+    text-align: right;
+    height: 75px;
+    margin-bottom: 10px;
+    font-size: 24px;
+    overflow: auto;
+}
+
+input[type='button'] {
+    margin-bottom: 20px;
+    height: 80px;
+    width: 70px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px;
+    font-size: 40px;
+    background-color: grey;
+    color: black;
+}
+
+p#b_sinal {
+    float: right;
+    margin: 0px 20px 0px 0px;
+}
+
+input.b_esp {
+    width: 135px;
+    height: 70px;
+    background-color: rgb(211, 69, 69);
+}
