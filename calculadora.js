@@ -19,59 +19,45 @@ function calc(botao) {
             trava = 0
         }
     } else {
-        if (typeof(botao) == 'string' && botao != '.') {
 
-            if (botao == 'C') { // reseta a calc
-                memoria = ''
-                n = ['', '']
-                ponto = [false, false]
-                codenum = 0
+        if (botao == 'C') { // reseta a calc
+            memoria = ''
+            n = ['', '']
+            ponto = [false, false]
+            codenum = 0
+            operacao = 0
+
+        } else if (botao == 'c') { // corrige
+            if (codenum == 1 && (n[codenum]).length == 0) {
                 operacao = 0
-
-            } else if (botao == 'c') { // corrige
-                if (codenum == 1 && (n[codenum]).length == 0) {
-                    operacao = 0
-                    codenum = 0
-                }
-
-                if (memoria[(memoria.length - 1)] == n[codenum][(n[codenum].length - 1)]) {
-                    if (n[codenum][(n[codenum].length - 1)] == '.') {
-                        ponto[codenum] = false
-                    }
-                    n[codenum] = (n[codenum]).slice(0, ((n[codenum]).length - 1))
-                }
-
-                memoria = memoria.slice(0, (memoria.length - 1)) //string - ultimo elemento
-
-            } else {
-
-                switch (botao) {
-                    case 'x':
-                        if (add('x')) calcula(1)
-                        break
-                    case '/':
-                        if (add('/')) calcula(2)
-                        break
-                    case '+':
-                        if (add('+')) calcula(3)
-                        break
-                    case '-':
-                        if (add('-')) calcula(4)
-                        break
-                    default: //chamada pelo botão igual
-                        calcula(0)
-                }
+                codenum = 0
             }
-        } else { // numeros
-            if (botao == '.') { // se for ponto
-                if (ponto[codenum] == false) { // se o número ainda não tem ponto
-                    add(botao) // adiciona o ponto
-                    ponto[codenum] = true
+
+            if (memoria[(memoria.length - 1)] == n[codenum][(n[codenum].length - 1)]) {
+                if (n[codenum][(n[codenum].length - 1)] == '.') {
+                    ponto[codenum] = false
                 }
-            } else {
-                add(botao) // se for numero adiciona o numero
+                n[codenum] = (n[codenum]).slice(0, ((n[codenum]).length - 1))
             }
+
+            memoria = memoria.slice(0, (memoria.length - 1)) //string - ultimo elemento
+
+        } else if (botao == '.') {
+
+            if (ponto[codenum] == false) { // se o número ainda não tem ponto
+                add(botao) // adiciona o ponto
+                ponto[codenum] = true
+            }
+
+        } else if (botao == '=') {
+
+            calculatudo(memoria)
+
+        } else {
+
+            add(botao) // se for numero ou operação adiciona
         }
+
 
     }
     tela.innerHTML = memoria
@@ -81,12 +67,7 @@ function add(a) { // passa info pra tela
 
     let ret = 1
 
-    if (n[codenum].length == 0 && a == '-') { //sinal menos no inicio do numero
-        n[codenum] += (a)
-        memoria += a
-        ret = 0
-
-    } else if (sinais.indexOf(a) != -1) { //sinais no geral
+    if (sinais.indexOf(a) != -1) { //sinais no geral
         if ((a != '-' && (sinais.indexOf(memoria[memoria.length - 1]) != -1)) || (memoria[memoria.length - 1] == '+' && a == '-') ||
             (memoria[memoria.length - 1] == a)) {
             memoria = memoria.slice(0, (memoria.length - 1)) // tratamento de inserção de sinais seguidos
@@ -109,52 +90,69 @@ function add(a) { // passa info pra tela
     return ret
 }
 
-function calcula(c) {
-    if (operacao == 0) {
-        operacao = c //primeira chamada
-        if (c != 0) codenum = 1
-    } else {
-        if (n[1] == '') n[1] = 0
 
-        const result = ['', 'x', '/', '+', '-']
-        switch (operacao) {
-            case 1:
-                n[0] = Number(n[0]) * Number(n[1])
-                break
-            case 2:
-                if (n[1] == 0) {
-                    memoria = 'ERRO: Não da pra dividir por 0'
-                    alert('Não é possivel dividir por 0!!')
-                    tela.innerHTML = memoria
-                    trava = 1
-                    return
-                }
-                n[0] = Number(n[0]) / Number(n[1])
-                break
-            case 3:
-                n[0] = Number(n[0]) + Number(n[1])
-                break
-            case 4:
-                console
-                n[0] = Number(n[0]) - Number(n[1])
-                break
+function calculatudo(exp) {
+    exp = exp.toString().split("+");
+    for (a = 0; a < exp.length; a++) {
+        exp[a] = exp[a].split("-");
+        for (b = 0; b < exp[a].length; b++) {
+            exp[a][b] = exp[a][b].split("x");
+
+            for (c = 0; c < exp[a][b].length; c++) {
+                //faz divisão primeiro
+                exp[a][b][c] = exp[a][b][c].split("/");
+                exp[a][b][c] = divideArray(exp[a][b][c]);
+            }
+            //faz multiplicação segundo
+            exp[a][b] = multiplicaArray(exp[a][b]);
         }
-
-        if (c == 0) codenum = 0
-        else codenum = 1 // variavel para setar em qual numero vamos mexer
-
-        if (isNaN(n[0]) || (sinais.indexOf(memoria[0]) != -1 && memoria[0] != '-')) {
-            trava = 1
-            memoria = 'ERRO, corrija a expressão'
-            alert('Erro na expressão')
-            return
-        }
-
-        n[1] = '' // reseta o segundo número
-        ponto[1] = false
-        n[0] = n[0].toFixed(2)
-        ponto[0] = true
-        memoria = `${n[0]}${result[c]}` //printa o resultado na tela
-        operacao = c // atualiza a variavel de controle
+        //faz subtração terceiro
+        exp[a] = subtraiArray(exp[a]);
     }
+    //faz soma quarto
+    exp = somaArray(exp);
+
+
+    if (exp.toString().indexOf(".") != -1) {
+        ponto[0] = true;
+    }
+
+    codenum = 0 // indica em qual numero esta sendo inserido as informações, codigo do num
+    n = [exp, ''] // numeros
+    operacao = 0 // qual tipo de operação a ser realizada
+    trava = 0
+    memoria = exp.toString();
+
+}
+
+function multiplicaArray(param) {
+    var res = 1;
+    for (var x = 0; x < param.length; x++) {
+        res *= param[x];
+    }
+    return res;
+}
+
+function divideArray(param) {
+    var res = param[0];
+    for (var x = 1; x < param.length; x++) {
+        res /= param[x];
+    }
+    return res;
+}
+
+function subtraiArray(param) {
+    var res = param[0];
+    for (var x = 1; x < param.length; x++) {
+        res -= param[x];
+    }
+    return res;
+}
+
+function somaArray(param) {
+    var res = 0;
+    for (var x = 0; x < param.length; x++) {
+        res += param[x];
+    }
+    return res;
 }
